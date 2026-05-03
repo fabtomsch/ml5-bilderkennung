@@ -12,18 +12,15 @@ const examples = [
     src: "images/Biene.jpg",
     note: "Klares Foto einer Biene im Vordergrund"
   },
-
-
   {
     id: "Orca",
     group: "correct",
     title: "Orca",
     expected: "orca",
-    expectedKeywords: ["orca","whale"],
+    expectedKeywords: ["orca", "whale"],
     src: "images/Wal.jpg",
-    note: "Wal - Orca, außerhalb des Wassers"
+    note: "Wal bzw. Orca außerhalb des Wassers"
   },
-
   {
     id: "banana",
     group: "correct",
@@ -31,27 +28,25 @@ const examples = [
     expected: "banana",
     expectedKeywords: ["banana"],
     src: "images/banane.webp",
-    note: "Form und Farbe sind typisch und gut erkennbar. Aber das Bild wurde künstlich angepasst"
+    note: "Form und Farbe sind typisch und gut erkennbar. Das Bild wurde künstlich angepasst."
   },
-
-    {
+  {
     id: "Biber",
     group: "wrong",
     title: "Biber",
     expected: "beaver",
     expectedKeywords: ["beaver", "biber"],
     src: "images/Biber.jpg",
-    note: "Biber ist vollem erkennbar. Fell und und Hintergrund haben ähnliche Farben"
+    note: "Der Biber ist erkennbar, aber Fell und Hintergrund haben ähnliche Farben."
   },
-
-    {
+  {
     id: "dog",
     group: "wrong",
     title: "Hund",
     expected: "dog / dachshund",
     expectedKeywords: ["dog", "dachshund"],
     src: "images/dog.jpg",
-    note: "Ein einzelnes Objekt steht deutlich im Vordergrund. Hat aber etwas bei sich. Der Tennisball wird erkannt aber der Hund nicht"
+    note: "Der Hund ist sichtbar, aber der Tennisball beeinflusst die Klassifikation."
   },
   {
     id: "Qualle",
@@ -60,20 +55,22 @@ const examples = [
     expected: "jellyfish",
     expectedKeywords: ["jellyfish", "meduse"],
     src: "images/quallen-swarm.jpg",
-    note: "Quallen die sich nicht stark vom Hintergrund abheben, werden nicht erkannt. Das Bild zeigt eine Qualle vor einem dunklen Hintergrund, die sich kaum abhebt."
+    note: "Quallen heben sich nicht stark vom Hintergrund ab und werden deshalb schwerer erkannt."
   }
 ];
 
 let classifier = null;
 let modelReady = false;
-const chartInstances = new Map();
 let userImageLoaded = false;
+
+const chartInstances = new Map();
 
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
   renderExampleCards();
   setupJumpButton();
+  setupUploadInteraction();
 
   classifier = ml5.imageClassifier(mobileNet, () => {
     modelReady = true;
@@ -87,10 +84,7 @@ function init() {
 
     classifyAllExamples();
   });
-
-  setupUploadInteraction();
 }
-
 
 function setupJumpButton() {
   const jumpButton = document.querySelector("#jump-to-upload");
@@ -118,6 +112,7 @@ function renderExampleCards() {
     card.innerHTML = `
       <div class="image-panel">
         <img id="img-${item.id}" alt="${escapeHtml(item.title)}" />
+
         <div class="meta">
           <strong>${escapeHtml(item.title)}</strong>
           <span>Erwartet: ${escapeHtml(item.expected)}</span>
@@ -125,8 +120,10 @@ function renderExampleCards() {
           <span id="badge-${item.id}" class="badge">Wartet auf Klassifikation …</span>
         </div>
       </div>
+
       <div class="chart-panel">
         <h4>Klassifikation</h4>
+
         <div class="chart-box">
           <canvas id="chart-${item.id}" aria-label="Balkendiagramm für ${escapeHtml(item.title)}"></canvas>
         </div>
@@ -149,6 +146,7 @@ async function classifyAllExamples() {
 
     try {
       await waitForImage(img);
+
       const results = await classifyImage(img);
       const isCorrect = evaluatePrediction(results, item.expectedKeywords);
 
@@ -157,6 +155,7 @@ async function classifyAllExamples() {
         : "Falsch nicht korrekt klassifiziert";
 
       badge.className = `badge ${isCorrect ? "correct" : "wrong"}`;
+
       renderChart(`chart-${item.id}`, results, isCorrect ? "correct" : "wrong");
     } catch (error) {
       badge.textContent = "Fehler bei Bild oder Klassifikation";
@@ -193,7 +192,10 @@ function classifyImage(imgElement) {
 
 function evaluatePrediction(results, expectedKeywords) {
   const topLabel = String(results[0]?.label || "").toLowerCase();
-  return expectedKeywords.some((keyword) => topLabel.includes(keyword.toLowerCase()));
+
+  return expectedKeywords.some((keyword) =>
+    topLabel.includes(keyword.toLowerCase())
+  );
 }
 
 function renderChart(canvasId, results, semanticType = "correct") {
@@ -201,17 +203,23 @@ function renderChart(canvasId, results, semanticType = "correct") {
   const topResults = results.slice(0, 3);
 
   const labels = topResults.map((result) => shortenLabel(result.label));
-  const values = topResults.map((result) => Number((result.confidence * 100).toFixed(2)));
+  const values = topResults.map((result) => toPercent(result));
 
   if (chartInstances.has(canvasId)) {
     chartInstances.get(canvasId).destroy();
   }
 
-  Chart.register(ChartDataLabels);
+  registerChartPlugin();
 
-  const barColor = semanticType === "correct"
-    ? "rgba(23, 128, 59, 0.82)"
-    : "rgba(180, 35, 24, 0.82)";
+  let barColor = "rgba(35, 87, 214, 0.82)";
+
+  if (semanticType === "correct") {
+    barColor = "rgba(23, 128, 59, 0.82)";
+  }
+
+  if (semanticType === "wrong") {
+    barColor = "rgba(180, 35, 24, 0.82)";
+  }
 
   const chart = new Chart(canvas, {
     type: "bar",
@@ -226,62 +234,142 @@ function renderChart(canvasId, results, semanticType = "correct") {
         }
       ]
     },
-options: {
-  indexAxis: "y",
-  responsive: true,
-  maintainAspectRatio: false,
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      maintainAspectRatio: false,
 
-  layout: {
-    padding: {
-      right: 35
-    }
-  },
+      layout: {
+        padding: {
+          right: 35
+        }
+      },
 
-  scales: {
-    x: {
-      min: 0,
-      max: 100,
-      ticks: {
-        callback: (value) => `${value}%`
-      }
-    },
-    y: {
-      ticks: {
-        font: {
-          size: window.innerWidth < 700 ? 10 : 12
+      scales: {
+        x: {
+          min: 0,
+          max: 100,
+          ticks: {
+            callback: (value) => `${value}%`
+          }
+        },
+        y: {
+          ticks: {
+            font: {
+              size: window.innerWidth < 700 ? 10 : 12
+            }
+          }
+        }
+      },
+
+      plugins: {
+        legend: {
+          display: false
+        },
+
+        tooltip: {
+          callbacks: {
+            label: (context) => `${context.parsed.x.toFixed(2)}% Confidence`
+          }
+        },
+
+        datalabels: {
+          color: (context) => {
+            const value = context.dataset.data[context.dataIndex];
+            return value > 85 ? "white" : "#172033";
+          },
+          anchor: "end",
+          align: (context) => {
+            const value = context.dataset.data[context.dataIndex];
+            return value > 85 ? "left" : "right";
+          },
+          offset: 6,
+          clamp: true,
+          formatter: (value) => `${value.toFixed(2)}%`,
+          font: {
+            weight: "bold"
+          }
         }
       }
     }
-  },
+  });
 
-  plugins: {
-    legend: {
-      display: false
+  chartInstances.set(canvasId, chart);
+}
+
+function renderPieChartWithOther(canvasId, results) {
+  const canvas = document.getElementById(canvasId);
+
+  const topResults = results.slice(0, 3);
+
+  const labels = topResults.map((result) => shortenLabel(result.label));
+  const values = topResults.map((result) => toPercent(result));
+
+  const sumTopValues = values.reduce((sum, value) => sum + value, 0);
+  const otherValue = Number(Math.max(0, 100 - sumTopValues).toFixed(2));
+
+  labels.push("Andere");
+  values.push(otherValue);
+
+  if (chartInstances.has(canvasId)) {
+    chartInstances.get(canvasId).destroy();
+  }
+
+  registerChartPlugin();
+
+  const chart = new Chart(canvas, {
+    type: "pie",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Confidence in %",
+          data: values,
+          backgroundColor: [
+            "#2f855a",
+            "#3182ce",
+            "#d69e2e",
+            "#9ca3af"
+          ]
+        }
+      ]
     },
-    tooltip: {
-      callbacks: {
-        label: (context) => `${context.parsed.x.toFixed(2)}% Confidence`
-      }
-    },
-    datalabels: {
-      color: (context) => {
-        const value = context.dataset.data[context.dataIndex];
-        return value > 85 ? "white" : "#172033";
-      },
-      anchor: "end",
-      align: (context) => {
-        const value = context.dataset.data[context.dataIndex];
-        return value > 85 ? "left" : "right";
-      },
-      offset: 6,
-      clamp: true,
-      formatter: (value) => `${value.toFixed(2)}%`,
-      font: {
-        weight: "bold"
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            boxWidth: 14,
+            font: {
+              size: window.innerWidth < 700 ? 10 : 12
+            }
+          }
+        },
+
+        tooltip: {
+          callbacks: {
+            label: (context) => `${context.label}: ${context.parsed.toFixed(2)}%`
+          }
+        },
+
+        datalabels: {
+          color: "white",
+          formatter: (value) => {
+            if (value < 3) {
+              return "";
+            }
+
+            return `${value.toFixed(1)}%`;
+          },
+          font: {
+            weight: "bold"
+          }
+        }
       }
     }
-  }
-}
   });
 
   chartInstances.set(canvasId, chart);
@@ -331,12 +419,18 @@ function setupUploadInteraction() {
 function handleFile(file) {
   const feedback = document.querySelector("#upload-feedback");
 
+  if (!modelReady) {
+    showUploadFeedback("Bitte kurz warten. Das Modell wird noch geladen.", "info");
+    return;
+  }
+
   if (!file) {
     showUploadFeedback("Keine Datei ausgewählt.", "bad");
     return;
   }
 
   const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
   if (!allowedTypes.includes(file.type)) {
     showUploadFeedback("Dieses Dateiformat wird nicht unterstützt. Bitte JPG, PNG, GIF oder WebP verwenden.", "bad");
     return;
@@ -347,10 +441,13 @@ function handleFile(file) {
   const resultCard = document.querySelector("#user-result-card");
 
   userImageLoaded = false;
+
   userImage.onload = () => {
     userImageLoaded = true;
     URL.revokeObjectURL(imageUrl);
+
     resultCard.classList.remove("hidden");
+
     showUploadFeedback("Bild geladen. Die Klassifikation startet automatisch.", "ok");
     classifyUserImage();
   };
@@ -378,10 +475,16 @@ async function classifyUserImage() {
 
   try {
     showUploadFeedback("Bild wird klassifiziert …", "info");
+
     const results = await classifyImage(userImage);
-    renderChart("user-chart", results, "correct");
+
+    renderPieChartWithOther("user-chart", results);
+
     const top = results[0];
-    showUploadFeedback(`Fertig. Top-Ergebnis: ${top.label} (${(top.confidence * 100).toFixed(2)}%).`, "ok");
+    showUploadFeedback(
+      `Fertig. Top-Ergebnis: ${top.label} (${toPercent(top).toFixed(2)}%).`,
+      "ok"
+    );
   } catch (error) {
     console.error(error);
     showUploadFeedback("Bei der Klassifikation ist ein Fehler aufgetreten.", "bad");
@@ -396,6 +499,7 @@ function resetUserUpload() {
   userImageLoaded = false;
   userImage.removeAttribute("src");
   fileInput.value = "";
+
   resultCard.classList.add("hidden");
 
   if (chartInstances.has("user-chart")) {
@@ -420,23 +524,26 @@ function waitForImage(img) {
 
 function setModelStatus(message, type) {
   const status = document.querySelector("#model-status");
+
   status.textContent = message;
   status.className = `status ${type}`;
 }
 
 function showUploadFeedback(message, type) {
   const feedback = document.querySelector("#upload-feedback");
+
   feedback.textContent = message;
   feedback.className = `status ${type}`;
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+function toPercent(result) {
+  const value = Number(result.confidence ?? result.probability ?? 0);
+
+  if (value <= 1) {
+    return Number((value * 100).toFixed(2));
+  }
+
+  return Number(value.toFixed(2));
 }
 
 function shortenLabel(label) {
@@ -449,4 +556,19 @@ function shortenLabel(label) {
   }
 
   return label;
+}
+
+function registerChartPlugin() {
+  if (typeof ChartDataLabels !== "undefined") {
+    Chart.register(ChartDataLabels);
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
