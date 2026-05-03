@@ -60,7 +60,7 @@ const examples = [
     expected: "jellyfish",
     expectedKeywords: ["jellyfish", "meduse"],
     src: "images/qualle.jpg",
-    note: "Quallen die sich nicht stark vom Hintergrund abheben"
+    note: "Quallen die sich nicht stark vom Hintergrund abheben, werden nicht erkannt. Bzw. haben eine sehr geringe confidence. Das Bild zeigt eine Qualle vor einem dunklen Hintergrund, die sich kaum abhebt."
   }
 ];
 
