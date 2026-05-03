@@ -198,8 +198,10 @@ function evaluatePrediction(results, expectedKeywords) {
 
 function renderChart(canvasId, results, semanticType = "correct") {
   const canvas = document.getElementById(canvasId);
-  const labels = results.map((result) => result.label);
-  const values = results.map((result) => Number((result.confidence * 100).toFixed(2)));
+  const topResults = results.slice(0, 3);
+
+  const labels = topResults.map((result) => shortenLabel(result.label));
+  const values = topResults.map((result) => Number((result.confidence * 100).toFixed(2)));
 
   if (chartInstances.has(canvasId)) {
     chartInstances.get(canvasId).destroy();
@@ -224,39 +226,62 @@ function renderChart(canvasId, results, semanticType = "correct") {
         }
       ]
     },
-    options: {
-      indexAxis: "y",
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          min: 0,
-          max: 100,
-          ticks: {
-            callback: (value) => `${value}%`
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          callbacks: {
-            label: (context) => `${context.parsed.x.toFixed(2)}% Confidence`
-          }
-        },
-        datalabels: {
-          color: "#172033",
-          anchor: "end",
-          align: "right",
-          formatter: (value) => `${value.toFixed(2)}%`,
-          font: {
-            weight: "bold"
-          }
+options: {
+  indexAxis: "y",
+  responsive: true,
+  maintainAspectRatio: false,
+
+  layout: {
+    padding: {
+      right: 35
+    }
+  },
+
+  scales: {
+    x: {
+      min: 0,
+      max: 100,
+      ticks: {
+        callback: (value) => `${value}%`
+      }
+    },
+    y: {
+      ticks: {
+        font: {
+          size: window.innerWidth < 700 ? 10 : 12
         }
       }
     }
+  },
+
+  plugins: {
+    legend: {
+      display: false
+    },
+    tooltip: {
+      callbacks: {
+        label: (context) => `${context.parsed.x.toFixed(2)}% Confidence`
+      }
+    },
+    datalabels: {
+      color: (context) => {
+        const value = context.dataset.data[context.dataIndex];
+        return value > 85 ? "white" : "#172033";
+      },
+      anchor: "end",
+      align: (context) => {
+        const value = context.dataset.data[context.dataIndex];
+        return value > 85 ? "left" : "right";
+      },
+      offset: 6,
+      clamp: true,
+      formatter: (value) => `${value.toFixed(2)}%`,
+      font: {
+        weight: "bold"
+      }
+    }
+  }
+}
   });
 
   chartInstances.set(canvasId, chart);
@@ -412,4 +437,16 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function shortenLabel(label) {
+  if (window.innerWidth < 700 && label.length > 22) {
+    return label.substring(0, 19) + "...";
+  }
+
+  if (label.length > 38) {
+    return label.substring(0, 35) + "...";
+  }
+
+  return label;
 }

@@ -343,4 +343,24 @@ footer {
 .chart-box canvas {
   display: block;
 }
+
+@media (max-width: 700px) {
+  .result-card {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .chart-panel {
+    padding: 0;
+  }
+
+  .chart-box {
+    height: 240px;
+    width: 100%;
+  }
+
+  .chart-panel h4 {
+    margin-top: 20px;
+  }
+}
 }
