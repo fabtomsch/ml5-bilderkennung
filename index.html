@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bilderkennung mit ml5.js – Image Classification</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ml5.js passend zum älteren Image Classification Tutorial -->
+  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+
+  <!-- Chart.js für Diagramme -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+  <!-- Plugin, damit Prozentwerte direkt im Diagramm stehen -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <header class="hero">
+    <p class="eyebrow">ml5.js · MobileNet · Image Classification</p>
+
+    <h1>Bilderkennung: Klassifikation mit einem vortrainierten Modell</h1>
+
+    <p>
+      Diese Web-Anwendung klassifiziert Beispielbilder und vom Nutzer hochgeladene Bilder direkt im Browser.
+      Links steht jeweils das Bild, rechts das Diagramm mit den Confidence-Werten.
+    </p>
+
+    <div id="model-status" class="status info" role="status" aria-live="polite">
+      Modell wird geladen …
+    </div>
+  </header>
+
+  <main>
+
+      <section aria-labelledby="upload-title" class="upload-section">
+      <h2 id="upload-title">Eigenes Bild klassifizieren</h2>
+
+      <p class="section-intro">
+        Lade ein eigenes Bild hoch oder ziehe es per Drag-and-drop in das Feld.
+        Erlaubt sind JPG, PNG, GIF und WebP. Das Bild wird lokal im Browser verarbeitet.
+      </p>
+
+      <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-describedby="upload-help">
+        <strong>Bild hier hineinziehen</strong>
+        <span>oder Datei auswählen</span>
+        <input id="file-input" type="file" accept="image/png,image/jpeg,image/gif,image/webp" />
+      </div>
+
+
+      <div id="upload-feedback" class="status hidden" role="status" aria-live="polite"></div>
+
+      <article id="user-result-card" class="result-card hidden">
+        <div class="image-panel">
+          <img id="user-image" alt="Vom Nutzer hochgeladenes Bild" />
+
+          <div class="button-row">
+            <button id="clear-button" type="button" class="secondary">Zurücksetzen</button>
+          </div>
+        </div>
+
+        <div class="chart-panel">
+          <h4>Ergebnis für eigenes Bild</h4>
+
+          <div class="chart-box">
+            <canvas id="user-chart" aria-label="Balkendiagramm der Klassifikation"></canvas>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section aria-labelledby="results-title">
+      <h2 id="results-title">Resultate und Visualisierung</h2>
+
+      <p class="section-intro">
+        Zuerst erscheinen drei einfache Beispielbilder, die MobileNet typischerweise korrekt erkennt.
+        Danach folgen drei schwierige oder künstlich veränderte Bilder, bei denen eine Fehlklassifikation erwartet wird.
+      </p>
+
+      <h3>R1a) Richtig klassifizierte Beispiele</h3>
+      <div id="correct-examples" class="example-list"></div>
+
+      <h3>R1b) Falsch klassifizierte / schwierige Beispiele</h3>
+      <div id="wrong-examples" class="example-list"></div>
+    </section>
+
+
+    <section aria-labelledby="discussion-title">
+      <h2 id="discussion-title">Diskussion</h2>
+
+      <ol class="discussion-list">
+        <li>Die Klassifikation funktioniert besonders gut bei Bildern, auf denen ein einzelnes, bekanntes Objekt deutlich im Vordergrund steht.</li>
+        <li>Bei Hund, Katze oder Obst liefert MobileNet meist plausible Labels mit hoher Confidence.</li>
+        <li>Schwieriger sind abstrakte, stark vereinfachte oder künstlich veränderte Bilder, weil sie nicht wie typische Trainingsbilder aus ImageNet aussehen.</li>
+        <li>Außerdem können mehrere Objekte im Bild die Vorhersage verschieben, weil das Modell nur eine Bildklasse priorisiert.</li>
+        <li>Die Confidence ist keine absolute Wahrheit, sondern nur die Sicherheit des Modells bezogen auf seine bekannten Klassen.</li>
+        <li>Ich habe gelernt, dass ein vortrainiertes Modell schnell nutzbar ist, aber stark von Trainingsdaten, Perspektive, Licht und Bildausschnitt abhängt.</li>
+        <li>Die Fehlklassifikationen zeigen, dass das Modell nicht wirklich „versteht“, was ein Objekt ist, sondern Muster mit gelernten Klassen vergleicht.</li>
+        <li>Für eine echte Anwendung müsste man zusätzliche Tests, klare Fehlermeldungen und eventuell ein speziell trainiertes Modell verwenden.</li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="documentation-title">
+      <h2 id="documentation-title">Dokumentation</h2>
+
+      <h3>1) Technische Dokumentation</h3>
+
+      <ul>
+        <li><strong>HTML5:</strong> HTML wird für die semantische Struktur der Webseite verwendet.</li>
+        <li><strong>CSS3:</strong> CSS gestaltet das Layout, die Farben, die Karten, das Upload-Feld und die responsive Darstellung.</li>
+        <li><strong>JavaScript:</strong> JavaScript steuert das Laden der Bilder, die Klassifikation und die Interaktion mit dem Nutzer.</li>
+        <li><strong>ml5.js:</strong> ml5.js wird verwendet, um das vortrainierte MobileNet-Modell einfach im Browser zu nutzen.</li>
+        <li><strong>Chart.js:</strong> Chart.js visualisiert die Confidence-Werte als Balkendiagramm.</li>
+        <li><strong>chartjs-plugin-datalabels:</strong> Dieses Plugin zeigt die Prozentwerte direkt an den Balken an.</li>
+      </ul>
+
+      <p>
+        Technische Besonderheit: Die Beispielbilder und Upload-Bilder werden mit derselben Klassifikationsfunktion verarbeitet.
+        Dadurch bleibt die Logik übersichtlich und konsistent. Außerdem werden beim Upload nur gültige Bildformate akzeptiert.
+      </p>
+
+      <h3>2) Fachliche Dokumentation</h3>
+
+      <p>
+        Die Anwendung nutzt ein vortrainiertes MobileNet-Modell über ml5.js. Für jedes Bild werden die wahrscheinlichsten Klassen
+        mit Confidence-Werten berechnet. Die höchste Vorhersage wird mit vorher definierten Erwartungsbegriffen verglichen,
+        um Beispielbilder als korrekt oder falsch einzuordnen. Die Diagramme zeigen die Confidence-Werte der wahrscheinlichsten Klassen.
+      </p>
+
+      <h3>Quellen / Links</h3>
+
+      <ul>
+        <li>ml5.js ImageClassifier Reference: https://archive-docs.ml5js.org/#/reference/image-classifier</li>
+        <li>ml5.js Dokumentation: https://docs.ml5js.org/</li>
+        <li>MobileNet Paper: https://arxiv.org/abs/1704.04861</li>
+        <li>ImageNet: https://www.image-net.org/</li>
+        <li>Chart.js: https://www.chartjs.org/</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Abgabehinweis: Diese Seite enthält Anwendung, Resultate, Diskussion und Dokumentation auf einer HTML-Seite.
+    </p>
+  </footer>
+</body>
+</html>
