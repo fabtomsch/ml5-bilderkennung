@@ -59,7 +59,7 @@ const examples = [
     title: "Qualle",
     expected: "jellyfish",
     expectedKeywords: ["jellyfish", "meduse"],
-    src: "images/Qualle.jpg",
+    src: "images/qualle.jpg",
     note: "Quallen die sich nicht stark vom Hintergrund abheben"
   }
 ];
