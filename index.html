@@ -37,7 +37,23 @@
 
   <main>
 
-      <section aria-labelledby="upload-title" class="upload-section">
+
+
+    <section aria-labelledby="results-title">
+      <h2 id="results-title">Resultate und Visualisierung</h2>
+
+      <p class="section-intro">
+        Zuerst erscheinen drei einfache Beispielbilder, die MobileNet typischerweise korrekt erkennt.
+        Danach folgen drei schwierige oder künstlich veränderte Bilder, bei denen eine Fehlklassifikation erwartet wird.
+      </p>
+
+      <h3>R1a) Richtig klassifizierte Beispiele</h3>
+      <div id="correct-examples" class="example-list"></div>
+
+      <h3>R1b) Falsch klassifizierte / schwierige Beispiele</h3>
+      <div id="wrong-examples" class="example-list"></div>
+    </section>
+          <section aria-labelledby="upload-title" class="upload-section">
       <h2 id="upload-title">Eigenes Bild klassifizieren</h2>
 
       <p class="section-intro">
@@ -73,36 +89,23 @@
       </article>
     </section>
 
-    <section aria-labelledby="results-title">
-      <h2 id="results-title">Resultate und Visualisierung</h2>
-
-      <p class="section-intro">
-        Zuerst erscheinen drei einfache Beispielbilder, die MobileNet typischerweise korrekt erkennt.
-        Danach folgen drei schwierige oder künstlich veränderte Bilder, bei denen eine Fehlklassifikation erwartet wird.
-      </p>
-
-      <h3>R1a) Richtig klassifizierte Beispiele</h3>
-      <div id="correct-examples" class="example-list"></div>
-
-      <h3>R1b) Falsch klassifizierte / schwierige Beispiele</h3>
-      <div id="wrong-examples" class="example-list"></div>
-    </section>
-
-
     <section aria-labelledby="discussion-title">
       <h2 id="discussion-title">Diskussion</h2>
 
       <ol class="discussion-list">
         <li>Die Klassifikation funktioniert besonders gut bei Bildern, auf denen ein einzelnes, bekanntes Objekt deutlich im Vordergrund steht.</li>
-        <li>Bei Hund, Katze oder Obst liefert MobileNet meist plausible Labels mit hoher Confidence.</li>
-        <li>Schwieriger sind abstrakte, stark vereinfachte oder künstlich veränderte Bilder, weil sie nicht wie typische Trainingsbilder aus ImageNet aussehen.</li>
-        <li>Außerdem können mehrere Objekte im Bild die Vorhersage verschieben, weil das Modell nur eine Bildklasse priorisiert.</li>
+        <li>Bei farblich typischen Tieren (Biene, ist gelb und schwarz) fällt es dem Modell leicht eine klassifikation zumachen.</li>
+        <li>Schwieriger wird es wenn die Farbe des Objekt sich nicht stark vom Hindergrund unterscheidet.</li>
+        <li>Außerdem können mehrere Objekte im Bild die Vorhersage verschieben, weil das Modell nur eine Bildklasse priorisiert. (Siehe Dackel)</li>
         <li>Die Confidence ist keine absolute Wahrheit, sondern nur die Sicherheit des Modells bezogen auf seine bekannten Klassen.</li>
         <li>Ich habe gelernt, dass ein vortrainiertes Modell schnell nutzbar ist, aber stark von Trainingsdaten, Perspektive, Licht und Bildausschnitt abhängt.</li>
-        <li>Die Fehlklassifikationen zeigen, dass das Modell nicht wirklich „versteht“, was ein Objekt ist, sondern Muster mit gelernten Klassen vergleicht.</li>
-        <li>Für eine echte Anwendung müsste man zusätzliche Tests, klare Fehlermeldungen und eventuell ein speziell trainiertes Modell verwenden.</li>
+        <li>Die Fehlklassifikationen zeigen, dass das Modell nicht wirklich „versteht“, so konnte ich mehr Beispielsbilder finden bei dem die Klassifikation nicht funktionierte.</li>
+        <li>Für eine echte Anwendung müsste man zusätzliche Tests, klare Fehlermeldungen und eventuell ein speziell trainiertes Modell verwenden. </li>
       </ol>
     </section>
+
+
+
 
     <section aria-labelledby="documentation-title">
       <h2 id="documentation-title">Dokumentation</h2>
@@ -120,7 +123,7 @@
 
       <p>
         Technische Besonderheit: Die Beispielbilder und Upload-Bilder werden mit derselben Klassifikationsfunktion verarbeitet.
-        Dadurch bleibt die Logik übersichtlich und konsistent. Außerdem werden beim Upload nur gültige Bildformate akzeptiert.
+        Dadurch bleibt die Logik übersichtlich und konsistent. Zudem werden die Beispielsbilder bei jedem Aufruf neu klassfiziert. Außerdem werden beim Upload nur gültige Bildformate akzeptiert.
       </p>
 
       <h3>2) Fachliche Dokumentation</h3>
@@ -143,10 +146,5 @@
     </section>
   </main>
 
-  <footer>
-    <p>
-      Abgabehinweis: Diese Seite enthält Anwendung, Resultate, Diskussion und Dokumentation auf einer HTML-Seite.
-    </p>
-  </footer>
 </body>
 </html>
