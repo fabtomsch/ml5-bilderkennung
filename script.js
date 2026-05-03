@@ -73,14 +73,37 @@ document.addEventListener("DOMContentLoaded", init);
 
 function init() {
   renderExampleCards();
+  setupJumpButton();
 
   classifier = ml5.imageClassifier(mobileNet, () => {
     modelReady = true;
-    setModelStatus("Modell geladen", "ok");
+
+    setModelStatus("Modell geladen. Du kannst jetzt eigene Bilder hochladen.", "ok");
+
+    const jumpButton = document.querySelector("#jump-to-upload");
+    if (jumpButton) {
+      jumpButton.classList.remove("hidden");
+    }
+
     classifyAllExamples();
   });
 
   setupUploadInteraction();
+}
+
+
+function setupJumpButton() {
+  const jumpButton = document.querySelector("#jump-to-upload");
+  const uploadSection = document.querySelector("#upload-section");
+
+  if (jumpButton && uploadSection) {
+    jumpButton.addEventListener("click", () => {
+      uploadSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
 }
 
 function renderExampleCards() {
@@ -242,7 +265,6 @@ function renderChart(canvasId, results, semanticType = "correct") {
 function setupUploadInteraction() {
   const dropZone = document.querySelector("#drop-zone");
   const fileInput = document.querySelector("#file-input");
-  const classifyButton = document.querySelector("#classify-button");
   const clearButton = document.querySelector("#clear-button");
 
   fileInput.addEventListener("change", (event) => {
@@ -276,8 +298,9 @@ function setupUploadInteraction() {
     }
   });
 
-  classifyButton.addEventListener("click", classifyUserImage);
-  clearButton.addEventListener("click", resetUserUpload);
+  if (clearButton) {
+    clearButton.addEventListener("click", resetUserUpload);
+  }
 }
 
 function handleFile(file) {
@@ -303,7 +326,7 @@ function handleFile(file) {
     userImageLoaded = true;
     URL.revokeObjectURL(imageUrl);
     resultCard.classList.remove("hidden");
-    showUploadFeedback("Bild geladen. Klicke auf „Classify“ oder warte auf die automatische Klassifikation.", "ok");
+    showUploadFeedback("Bild geladen. Die Klassifikation startet automatisch.", "ok");
     classifyUserImage();
   };
 

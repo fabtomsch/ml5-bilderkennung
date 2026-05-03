@@ -105,6 +105,49 @@ h4 {
   color: var(--bad);
 }
 
+
+.start-hinweis {
+  max-width: 800px;
+  margin: 20px 0;
+  padding: 16px 18px;
+
+  background: #fff8e1;
+  border-left: 6px solid #f2b705;
+  border-radius: 10px;
+
+  color: #2b2b2b;
+}
+
+.start-hinweis strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.05rem;
+}
+
+.start-hinweis p {
+  margin: 0 0 12px 0;
+}
+
+
+.jump-button {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #2357d6;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.jump-button:hover {
+  background: #173b91;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .hidden {
   display: none !important;
 }

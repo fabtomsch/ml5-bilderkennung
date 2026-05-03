@@ -30,9 +30,21 @@
       Links steht jeweils das Bild, rechts das Diagramm mit den Confidence-Werten.
     </p>
 
-    <div id="model-status" class="status info" role="status" aria-live="polite">
-      Modell wird geladen …
-    </div>
+<div class="start-hinweis">
+  <strong>Kurzer Hinweis:</strong>
+  <p>
+    Die Anwendung lädt zuerst das KI-Modell. Das kann ein paar Sekunden dauern.
+    Sobald unten „Modell geladen“ steht, können eigene Bilder hochgeladen und klassifiziert werden.
+  </p>
+
+  <div id="model-status" class="status info" role="status" aria-live="polite">
+    Modell wird geladen …
+  </div>
+
+  <button id="jump-to-upload" class="jump-button hidden" type="button">
+    Zum eigenen Bild-Upload
+  </button>
+</div>
   </header>
 
   <main>
@@ -53,13 +65,16 @@
       <h3>R1b) Falsch klassifizierte / schwierige Beispiele</h3>
       <div id="wrong-examples" class="example-list"></div>
     </section>
-          <section aria-labelledby="upload-title" class="upload-section">
+    
+    
+    
+<section id="upload-section" aria-labelledby="upload-title" class="upload-section">
       <h2 id="upload-title">Eigenes Bild klassifizieren</h2>
 
       <p class="section-intro">
         Lade ein eigenes Bild hoch oder ziehe es per Drag-and-drop in das Feld.
         Erlaubt sind JPG, PNG, GIF und WebP. Das Bild wird lokal im Browser verarbeitet.
-      </p>
+      </p> 
 
       <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-describedby="upload-help">
         <strong>Bild hier hineinziehen</strong>
