@@ -7,7 +7,7 @@ const examples = [
     id: "Bee",
     group: "correct",
     title: "Bee",
-    expected: "Bee",
+    expected: "bee",
     expectedKeywords: ["bee"],
     src: "images/Biene.jpg",
     note: "Klares Foto einer Biene im Vordergrund"
@@ -18,7 +18,7 @@ const examples = [
     id: "Orca",
     group: "correct",
     title: "Orca",
-    expected: "Abstrakte Formen",
+    expected: "orca",
     expectedKeywords: ["orca","whale"],
     src: "images/Wal.jpg",
     note: "Wal - Orca, außerhalb des Wassers"
@@ -28,7 +28,7 @@ const examples = [
     id: "banana",
     group: "correct",
     title: "Banane",
-    expected: "Banane",
+    expected: "banana",
     expectedKeywords: ["banana"],
     src: "images/banane.webp",
     note: "Form und Farbe sind typisch und gut erkennbar. Aber das Bild wurde künstlich angepasst"
