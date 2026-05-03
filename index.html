@@ -39,7 +39,7 @@
   </div>
 
   <button id="jump-to-upload" class="jump-button hidden" type="button">
-    Zum eigenen Bild-Upload
+    Eigenes Bild hochladen
   </button>
 </div>
   </header>
@@ -104,16 +104,16 @@
     <section aria-labelledby="discussion-title">
       <h2 id="discussion-title">Diskussion</h2>
 
-      <ol class="discussion-list">
-        <li>Die Klassifikation funktioniert besonders gut bei Bildern, auf denen ein einzelnes, bekanntes Objekt deutlich im Vordergrund steht.</li>
-        <li>Bei farblich typischen Tieren (Biene, ist gelb und schwarz) fällt es dem Modell leicht eine klassifikation zumachen.</li>
-        <li>Schwieriger wird es wenn die Farbe des Objekt sich nicht stark vom Hindergrund unterscheidet.</li>
-        <li>Außerdem können mehrere Objekte im Bild die Vorhersage verschieben, weil das Modell nur eine Bildklasse priorisiert. (Siehe Dackel)</li>
-        <li>Die Confidence ist keine absolute Wahrheit, sondern nur die Sicherheit des Modells bezogen auf seine bekannten Klassen.</li>
-        <li>Ich habe gelernt, dass ein vortrainiertes Modell schnell nutzbar ist, aber stark von Trainingsdaten, Perspektive, Licht und Bildausschnitt abhängt.</li>
-        <li>Die Fehlklassifikationen zeigen, dass das Modell nicht wirklich „versteht“, so konnte ich mehr Beispielsbilder finden bei dem die Klassifikation nicht funktionierte.</li>
-        <li>Für eine echte Anwendung müsste man zusätzliche Tests, klare Fehlermeldungen und eventuell ein speziell trainiertes Modell verwenden. </li>
-      </ol>
+  <ol class="discussion-list">
+    <li>Die Klassifikation funktioniert besonders gut bei Bildern, auf denen ein einzelnes, bekanntes Objekt deutlich im Vordergrund steht.</li>
+    <li>Bei farblich typischen Tieren, zum Beispiel einer gelb-schwarzen Biene, fällt dem Modell die Klassifikation leichter.</li>
+    <li>Schwieriger wird es, wenn sich die Farbe des Objekts nicht stark vom Hintergrund unterscheidet.</li>
+    <li>Mehrere Objekte im Bild können die Vorhersage beeinflussen, weil das Modell nur bestimmte Klassen priorisiert. Das sieht man zum Beispiel beim Dackel mit Tennisball.</li>
+    <li>Die Confidence ist keine absolute Wahrheit, sondern zeigt nur, wie sicher das Modell bei seinen bekannten Klassen ist.</li>
+    <li>Ich habe gelernt, dass ein vortrainiertes Modell schnell nutzbar ist, aber stark von Trainingsdaten, Perspektive, Licht und Bildausschnitt abhängt.</li>
+    <li>Die Fehlklassifikationen zeigen, dass das Modell Bilder nicht wirklich versteht, sondern Muster mit bekannten Klassen vergleicht.</li>
+    <li>Für eine echte Anwendung müsste man zusätzliche Tests, klare Fehlermeldungen und eventuell ein speziell trainiertes Modell verwenden.</li>
+  </ol>
     </section>
 
 
@@ -135,15 +135,14 @@
 
       <p>
         Technische Besonderheit: Die Beispielbilder und Upload-Bilder werden mit derselben Klassifikationsfunktion verarbeitet.
-        Dadurch bleibt die Logik übersichtlich und konsistent. Zudem werden die Beispielsbilder bei jedem Aufruf neu klassfiziert. Außerdem werden beim Upload nur gültige Bildformate akzeptiert.
+        Dadurch bleibt die Logik übersichtlich und konsistent. Zudem werden die Beispielbilder bei jedem Aufruf der Seite neu klassifiziert. Außerdem werden beim Upload nur gültige Bildformate akzeptiert.
       </p>
 
       <h3>2) Fachliche Dokumentation</h3>
 
       <p>
-        Die Anwendung nutzt ein vortrainiertes MobileNet-Modell über ml5.js. Für jedes Bild werden die wahrscheinlichsten Klassen
-        mit Confidence-Werten berechnet. Die höchste Vorhersage wird mit vorher definierten Erwartungsbegriffen verglichen,
-        um Beispielbilder als korrekt oder falsch einzuordnen. Die Diagramme zeigen die Confidence-Werte der wahrscheinlichsten Klassen.
+        Die Anwendung lädt zuerst das KI-Modell. Das kann ein paar Sekunden dauern.
+        Sobald „Modell geladen“ erscheint, können eigene Bilder hochgeladen und automatisch klassifiziert werden.
       </p>
 
       <h3>Quellen / Links</h3>
