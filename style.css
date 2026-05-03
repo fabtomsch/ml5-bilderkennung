@@ -180,13 +180,6 @@ h4 {
   padding: 10px;
 }
 
-/* 
-  WICHTIG:
-  Das war der Hauptfehler beim Diagramm.
-  Chart.js braucht einen Container mit klarer Höhe.
-*/
-
-
 .upload-section {
   margin-top: 44px;
 }
