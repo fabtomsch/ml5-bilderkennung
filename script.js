@@ -39,7 +39,7 @@ const examples = [
     group: "wrong",
     title: "Biber",
     expected: "beaver",
-    expectedKeywords: ["beaver"],
+    expectedKeywords: ["beaver", "biber"],
     src: "images/Biber.jpg",
     note: "Biber ist vollem erkennbar. Fell und und Hintergrund haben ähnliche Farben"
   },
@@ -58,8 +58,8 @@ const examples = [
     group: "wrong",
     title: "Qualle",
     expected: "jellyfish",
-    expectedKeywords: ["jellyfish"],
-    src: "images/qualle.jpg",
+    expectedKeywords: ["jellyfish", "meduse"],
+    src: "images/Qualle.jpg",
     note: "Quallen die sich nicht stark vom Hintergrund abheben"
   }
 ];
